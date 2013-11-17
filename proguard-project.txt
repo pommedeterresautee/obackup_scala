@@ -1,0 +1,166 @@
+#DEBUG ONLY
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+##---------------Begin: proguard configuration common for all Android apps ----------
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+-dontpreverify
+-verbose
+#-dump class_files.txt
+#-printseeds seeds.txt
+#-printusage unused.txt
+-printmapping mapping.txt
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-allowaccessmodification
+-repackageclasses ''
+
+-keepattributes *Annotation*
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class com.android.vending.licensing.ILicensingService
+-dontnote com.android.vending.licensing.ILicensingService
+
+-keep class * implements java.io.Serializable
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    !private <fields>;
+    !private <methods>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+# Preserve all native method names and the names of their classes.
+#-keepclasseswithmembernames class * {
+#native <methods>;
+#}
+
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+# Preserve static fields of inner classes of R classes that might be accessed
+# through introspection.
+#-keepclassmembers class **.R$* {
+#public static <fields>;
+#}
+
+# Preserve the special static methods that are required in all enumeration classes.
+-keepclassmembers enum * {
+public static **[] values();
+public static ** valueOf(java.lang.String);
+}
+
+#-keep public class * {
+#public protected *;
+#}
+
+-keep class * implements android.os.Parcelable {
+public static final android.os.Parcelable$Creator *;
+}
+##---------------End: proguard configuration common for all Android apps ----------
+
+##---------------Begin: proguard configuration for Gson ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+##---------------End: proguard configuration for Gson ----------
+
+#Begin: proguard configuration for Action bar sherlock
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class com.actionbarsherlock.** { *; }
+-keep interface com.actionbarsherlock.** { *; }
+
+# keep a business class (add Serializable, so for now it s ok)
+#-keep public class com.pommedeterresautee.twoborange3.Network.API.Device.DeviceProperties { *; }
+
+# ormlite uses reflection
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.** { *; }
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.** { *; }
+-keepclassmembers interface com.j256.** { *; }
+
+# admob already shrunk
+-keep class com.admob.**
+
+-assumenosideeffects class com.pommedeterresautee.twoborange3.StaticFunctions.Ln {<methods>;}
+
+#Bugsense
+-keep public class com.bugsense.*
+
+# Google Play Services and Google Drive
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+# Google API
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+-keep class com.google.** { *;}
+-keep interface com.google.** { *;}
+-dontwarn com.google.**
+
+# Needed by google-http-client-android when linking against an older platform version
+-dontwarn com.google.api.client.extensions.android.**
+-dontwarn com.google.api.client.googleapis.extensions.android.**
+-keepclassmembers class * {
+@com.google.api.client.util.Key <fields>;
+}
+
+-keep class com.google.api.services.drive.** {*;}
+-keep class com.google.api.** {*;}
+-keep class * extends com.google.api.client.json.GenericJson {*;}
+
+
+# Needed by Guava
+# See https://groups.google.com/forum/#!topic/guava-discuss/YCZzeCiIVoI
+
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.common.collect.MinMaxPriorityQueue
+-keepclasseswithmembers public class * {
+    public static void main(java.lang.String[]);
+}
+
+#JodaTime
+-dontwarn org.joda.convert.**
+
+# javamail - some classes are not supported by Android, so proguard complains
+-dontwarn java.awt.**,javax.security.**,java.beans.**
+#email relative class to keep
+-keep class javamail.** {*;}
+-keep class javax.mail.** {*;}
+-keep class javax.activation.** {*;}
+
+-keep class com.sun.mail.dsn.** {*;}
+-keep class com.sun.mail.handlers.** {*;}
+-keep class com.sun.mail.smtp.** {*;}
+-keep class com.sun.mail.util.** {*;}
+-keep class mailcap.** {*;}
+-keep class mimetypes.** {*;}
+-keep class myjava.awt.datatransfer.** {*;}
+-keep class org.apache.harmony.awt.** {*;}
+-keep class org.apache.harmony.misc.** {*;}
