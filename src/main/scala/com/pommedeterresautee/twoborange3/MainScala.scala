@@ -1,23 +1,13 @@
-package com.pommedeterresautee.twoborange3;
+package com.pommedeterresautee.twoborange3
 
 
-import org.scaloid.common._
-import android.graphics.Color
+import android.app.Activity
+import android.os.Bundle
 
+class MainScala extends Activity with TypedViewHolder with SideMenu {
 
-class MainScala extends SActivity {
-
-  onCreate {
-    contentView = new SVerticalLayout {
-      style {
-        case b: SButton => b.textColor(Color.RED).onClick(longToast("Bang!"))
-        case t: STextView => t textSize 10.dip
-        case v => v.backgroundColor(Color.YELLOW)
-      }
-
-      STextView("I am 10 dip tall")
-      STextView("I am taller than you") textSize 15.dip // overriding
-      SEditText("Yellow input field")
-    } padding 20.dip
+  override def onCreate(savedInstanceState: Bundle){
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.main)
   }
 }

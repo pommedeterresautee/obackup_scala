@@ -1,8 +1,10 @@
 // so we can use keywords from Android, such as 'Android' and 'proguardOptions'
 import android.Keys._
+import android.Dependencies.{aar,apklib}
 
 // load the android plugin into the build
 android.Plugin.androidBuild
+
  
 // project name, completely optional
 name := "OBackup"
@@ -16,11 +18,9 @@ scalacOptions in Compile += "-feature"
 // for non-ant-based projects, you'll need this for the specific build target:
 platformTarget in Android := "android-19"
 
-resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/",
- "Goldchen rep" at "https://github.com/Goddchen/mvn-repo/raw/master/")
+resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/")
 
 libraryDependencies ++= Seq (
-  "org.scaloid" %% "scaloid" % "latest.integration",
   "com.android.support" % "support-v4" % "19.0.0",
   "com.google.code.gson" % "gson" % "latest.integration",
   "org.joda" % "joda-convert" % "1.5",
@@ -39,7 +39,8 @@ libraryDependencies ++= Seq (
 ideaExcludeFolders ++= Seq (
     ".idea",
     ".idea_modules",
-    "target"
+    "target",
+    "project"
 )
 
 proguardScala in Android := true

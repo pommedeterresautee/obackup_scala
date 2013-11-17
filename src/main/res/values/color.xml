@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2013
+  ~ This file is part of 2BOrange Android application and is the property of its Author, Michaël BENESTY.
+  ~
+  ~ You may be sued by the Author for any violation of this property.
+  ~
+  ~ Using this file in any way without an explicit authorization of the Author is a violation of this property.
+  -->
+
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="clear_gray">#eeeeee</color> //Bg
+    <color name="middle_gray">#555555</color>  // 2
+    <color name="dark_gray">#333333</color> // 1
+    <color name="shadow">#cc222222</color>
+    <color name="very_dark_gray">#1e1e1e</color> // 0
+    <color name="black">#000000</color>
+    <color name="orange">#FF9900</color>
+</resources>
