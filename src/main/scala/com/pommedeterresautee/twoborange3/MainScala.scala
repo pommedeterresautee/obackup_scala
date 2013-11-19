@@ -15,8 +15,8 @@ class MainScala extends FragmentActivity with TypedViewHolder with SideMenu {
   override def onCreate(savedInstanceState: Bundle){
     super.onCreate(savedInstanceState)
     setContentView(R.layout.main)
-    mUnsubscribe = Some(Busybox.startCopyAsyncBusyboxIfNeeded(this))
+    mUnsubscribe = Busybox.startCopyAsyncBusyboxIfNeeded(this)
   }
 
-  override def onDestroy() = mUnsubscribe.map(_.unsubscribe())
+  override def onDestroy() = {mUnsubscribe.map(_.unsubscribe()); super.onDestroy()}
 }

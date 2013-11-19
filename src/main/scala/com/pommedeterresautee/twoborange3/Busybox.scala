@@ -13,15 +13,21 @@ object Busybox {
   private val BUSYBOX_FILENAME_INTERN: String = "busybox-linus"
   private val BUSYBOX_SIZE: Long = 1165484l
 
-  def startCopyAsyncBusyboxIfNeeded(context: Context): Subscription = {
-    implicit val ctx: Context = context
-    Observable(copyBusyBoxIfNotYetDone(context.getApplicationContext)).observeOn(Schedulers.currentThread)
+  /**
+   * Proceed to the installation of Busybox in a thread safe way.
+   * @param context Activity one
+   * @return a Rx Unsubscribe object
+   */
+  def startCopyAsyncBusyboxIfNeeded(implicit context: Context) = {
+    val unsubsb = Observable(copyBusyBoxIfNotYetDone(context.getApplicationContext))
+      .observeOn(Schedulers.currentThread)
       .materialize
       .subscribe(n => n match {
       case OnNext(v) if v => longToast(R.string.busybox_installed)
       case OnCompleted(c) => //Never called
-      case OnError(err) => err match {case Exception => longToast(ctx.getString(R.string.busybox_error_installation,err.getMessage))}
+      case OnError(err) => err match {case err: Exception => longToast(context.getString(R.string.busybox_error_installation, err.getMessage))}
     })
+    Some(unsubsb)
   }
 
   /**
