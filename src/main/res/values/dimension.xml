@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2013
+  ~ This file is part of 2BOrange Android application and is the property of its Author, Michaël BENESTY.
+  ~
+  ~ You may be sued by the Author for any violation of this property.
+  ~
+  ~ Using this file in any way without an explicit authorization of the Author is a violation of this property.
+  -->
+
+<resources >
+    <item type = "dimen"
+        name = "sidebar_width" >250dp
+    </item >
+    <item type = "dimen"
+        name = "buttonMarginLeft" >8dp
+    </item >
+    <item type = "dimen"
+        name = "MarginGl" >3dp
+    </item >
+    <item type = "dimen"
+        name = "Borders" >3dp
+    </item >
+    <item type = "dimen"
+        name = "PaddingButtonToolbar" >8dp
+    </item >
+    <item type = "dimen"
+        name = "DropShadow" >7dp
+    </item >
+
+    <item type = "dimen"
+        name = "PaddingListview" >7dp
+    </item >
+
+    <item type = "dimen"
+        name = "rounded" >10dp
+    </item >
+</resources >

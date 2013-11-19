@@ -112,15 +112,14 @@ public class InterfaceFunctions {
     }
 
     /**
-     * This method convets dp unit to equivalent device specific value in pixels.
+     * This method converts dp unit to equivalent device specific value in pixels.
      *
      * @param dp      A value in dp(Device independent pixels) unit. Which we need to convert into pixels
      * @param context Context to get resources and device specific display metrics
      * @return A float value to represent Pixels equivalent to dp according to device
      */
-    public static int convertDpToPixel(int dp, Context context) {
-        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-        return px;
+    public static int Dp2Px(int dp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     /**

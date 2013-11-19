@@ -21,6 +21,9 @@ platformTarget in Android := "android-19"
 resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/")
 
 libraryDependencies ++= Seq (
+  "org.scaloid" %% "scaloid" % "latest.integration",
+  "com.netflix.rxjava" % "rxjava-scala" % "latest.integration",
+  "com.netflix.rxjava" % "rxjava-android" % "latest.integration",
   "com.android.support" % "support-v4" % "19.0.0",
   "com.google.code.gson" % "gson" % "latest.integration",
   "org.joda" % "joda-convert" % "1.5",
@@ -43,7 +46,11 @@ ideaExcludeFolders ++= Seq (
     "project"
 )
 
-proguardScala in Android := true
+proguardCache in Android ++= Seq(
+  ProguardCache("org.scaloid") % "org.scaloid" %% "scaloid",
+  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala"
+)
+
 
 // call install and run without having to prefix with android:
 run <<= run in Android

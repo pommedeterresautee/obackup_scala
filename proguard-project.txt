@@ -164,3 +164,9 @@ public static final android.os.Parcelable$Creator *;
 -keep class myjava.awt.datatransfer.** {*;}
 -keep class org.apache.harmony.awt.** {*;}
 -keep class org.apache.harmony.misc.** {*;}
+
+#Scaloid
+-keep class org.scaloid.common.**
+
+#RxJava + Scala support
+-dontwarn rx.lang.scala.**, rx.subjects.UnsubscribeTester, rx.android.concurrency.**, rx.operators.**
