@@ -10,11 +10,15 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
-    <color name="clear_gray">#eeeeee</color> //Bg
-    <color name="middle_gray">#555555</color>  // 2
-    <color name="dark_gray">#333333</color> // 1
+    <!--Bg-->
+    <color name="clear_gray">#eeeeee</color>
+    <!--2-->
+    <color name="middle_gray">#555555</color>
+    <!--1-->
+    <color name="dark_gray">#333333</color>
     <color name="shadow">#cc222222</color>
-    <color name="very_dark_gray">#1e1e1e</color> // 0
+    <!--0-->
+    <color name="very_dark_gray">#1e1e1e</color>
     <color name="black">#000000</color>
     <color name="orange">#FF9900</color>
 </resources>

@@ -1,14 +1,15 @@
-package com.pommedeterresautee.twoborange3
-
+package com.pommedeterresautee.twoborange3.Section.Terminal
 
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 
 
 import rx.lang.scala.Subscription
+import com.pommedeterresautee.twoborange3.Common.{SideMenu, Busybox}
+import com.pommedeterresautee.twoborange3.{R, TypedViewHolder}
 
 
-class MainScala extends FragmentActivity with TypedViewHolder with SideMenu {
+class TerminalActivity extends FragmentActivity with TypedViewHolder with SideMenu {
 
   var mUnsubscribe: Option[Subscription] = None
 

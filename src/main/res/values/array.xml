@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2013
+  ~ This file is part of 2BOrange Android application and is the property of its Author, Michaël BENESTY.
+  ~
+  ~ You may be sued by the Author for any violation of this property.
+  ~
+  ~ Using this file in any way without an explicit authorization of the Author is a violation of this property.
+  -->
+
+<resources >
+    <string-array name = "NameTypes" >
+        <item >Device time (Default)</item >
+        <item >UTC Time</item >
+    </string-array >
+
+    <string-array name = "NameValues" >
+        <item >device</item >
+        <item >utc</item >
+    </string-array >
+
+    <string-array name = "BackupTypes" >
+        <item >CWM Full - bigger size (default)</item >
+        <item >CWM Incremental - need CWM 6.X</item >
+        <item >CWM Split - when partition > 2GB</item >
+        <item >TWRP - compression disabled</item >
+        <item >TWRP - compression enabled (TAR)</item >
+    </string-array >
+
+    <string-array name = "BackupValues" >
+        <item >full</item >
+        <item >incremental</item >
+        <item >split</item >
+        <item >TWRP</item >
+        <item >TWRP_compression</item >
+    </string-array >
+
+    <string-array name = "ContactValues" >
+        <item >Bug report</item >
+        <item >Feature request</item >
+        <item >Other</item >
+    </string-array >
+
+    <string-array name = "DeltaOperationTypes" >
+        <item >ODelta</item >
+        <item >Rebuild</item >
+    </string-array >
+
+    <string-array name = "FTPConnectionType" >
+        <item >Active data transfer</item >
+        <item >Passive data transfer</item >
+    </string-array >
+
+</resources >

@@ -1,24 +1,22 @@
-package com.pommedeterresautee.twoborange3
+package com.pommedeterresautee.twoborange3.Common
 
 import android.app.Activity
 import android.support.v4.widget.DrawerLayout
 
 import android.support.v4.app.ActionBarDrawerToggle
 import android.support.v4.view.GravityCompat
-import android.content.{Context, Intent}
+import android.content.Intent
 import android.view.{MenuItem, Gravity, ViewGroup, View}
 import android.os.Bundle
 import android.widget.{TextView, BaseAdapter, AdapterView, ListView}
 import android.widget.AdapterView.OnItemClickListener
 import android.util.TypedValue
-import org.scaloid.common._
+import com.pommedeterresautee.twoborange3.{FONT, InterfaceFunctions, R}
 
 /**
  * Trait to add a side menu to an Activity
  */
 trait SideMenu extends Activity {
-
-  implicit val ctx: Context = this
 
   case class SideMenuItem(mTitle: Int, mIcon: Int, mIntent: Intent, mShouldFinishCurrentActivity: Boolean = true)
 

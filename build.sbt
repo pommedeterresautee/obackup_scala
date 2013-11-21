@@ -22,8 +22,9 @@ resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/")
 
 libraryDependencies ++= Seq (
   "org.scaloid" %% "scaloid" % "latest.integration",
-  "com.netflix.rxjava" % "rxjava-scala" % "latest.integration",
-  "com.netflix.rxjava" % "rxjava-android" % "latest.integration",
+  "com.netflix.rxjava" % "rxjava-core" % "latest.integration",
+  "com.netflix.rxjava" % "rxjava-scala" % "latest.integration" intransitive(),
+  "com.netflix.rxjava" % "rxjava-android" % "latest.integration" intransitive(),
   "com.android.support" % "support-v4" % "19.0.0",
   "com.google.code.gson" % "gson" % "latest.integration",
   "org.joda" % "joda-convert" % "1.5",
@@ -48,7 +49,9 @@ ideaExcludeFolders ++= Seq (
 
 proguardCache in Android ++= Seq(
   ProguardCache("org.scaloid") % "org.scaloid" %% "scaloid",
-  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala"
+  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-core",
+  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
+  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android"
 )
 
 

@@ -15,7 +15,7 @@ import android.test.ActivityInstrumentationTestCase2;
 public class mainTest extends ActivityInstrumentationTestCase2<main> {
 
     public mainTest() {
-        super("com.pommedeterresautee.twoborange3", main.class);
+        super(main.class);
     }
 
 }

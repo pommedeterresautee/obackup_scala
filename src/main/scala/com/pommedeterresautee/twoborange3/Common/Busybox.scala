@@ -1,4 +1,4 @@
-package com.pommedeterresautee.twoborange3
+package com.pommedeterresautee.twoborange3.Common
 
 import java.io._
 import android.content.Context
@@ -6,6 +6,7 @@ import rx.lang.scala._
 import rx.lang.scala.concurrency.Schedulers
 import rx.lang.scala.Notification.{OnError, OnCompleted, OnNext}
 import org.scaloid.common._
+import com.pommedeterresautee.twoborange3.R
 
 
 object Busybox {
@@ -73,7 +74,7 @@ object Busybox {
       val bytes = new Array[Byte](1024) //1024 bytes - Buffer size
       Iterator
         .continually (is.read(bytes))
-        .takeWhile (-1 !=)
+        .takeWhile (_ != -1 )
         .foreach (read=>fos.write(bytes,0,read))
         fos.close()
 

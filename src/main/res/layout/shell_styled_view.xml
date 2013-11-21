@@ -9,22 +9,20 @@
   ~ Using this file in any way without an explicit authorization of the Author is a violation of this property.
   -->
 
-<EditText xmlns:android = "http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/terminal_view"
-          android:layout_width = "match_parent"
-          android:layout_height = "match_parent"
-          android:textSize = "13sp"
-          android:typeface = "monospace"
-          android:scrollbars = "vertical"
-          android:visibility = "visible"
-          android:gravity = "top|left"
-          android:padding = "@dimen/MarginGl"
-          android:textColor = "@color/orange"
-          android:background = "@color/dark_gray"
-          android:fadeScrollbars = "false"
-          android:inputType = "textMultiLine|textFilter|textNoSuggestions"
-          tools:text="#>Shell content\nsecond line\nThird line"
-    >
-
-</EditText >
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/terminal_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textSize="13sp"
+    android:typeface="monospace"
+    android:scrollbars="vertical"
+    android:visibility="visible"
+    android:gravity="top|left"
+    android:padding="@dimen/MarginGl"
+    android:textColor="@color/orange"
+    android:background="@color/dark_gray"
+    android:fadeScrollbars="false"
+    android:inputType="textMultiLine|textFilter|textNoSuggestions"
+    tools:text="#>Shell content\nsecond line\nThird line"
+    />

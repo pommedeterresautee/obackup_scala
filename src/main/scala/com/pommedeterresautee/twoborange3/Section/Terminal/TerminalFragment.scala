@@ -1,14 +1,16 @@
-package com.pommedeterresautee.twoborange3
+package com.pommedeterresautee.twoborange3.Section.Terminal
 
 import android.support.v4.app.Fragment
 import android.view.{View, ViewGroup, LayoutInflater}
 import android.os.Bundle
-import android.widget.{EditText, TextView}
+import android.widget.{Toast, EditText, TextView}
 import android.content.Context
 import org.scaloid.common._
+import com.pommedeterresautee.twoborange3.R
+import com.pommedeterresautee.twoborange3.Preference.BackupPref
 
 
-class Terminal extends Fragment {
+class TerminalFragment extends Fragment {
 
   def Terminal {}
 
@@ -20,5 +22,9 @@ class Terminal extends Fragment {
 
   override def onStart(){
     super.onStart()
+    BackupPref.register(getActivity)
+    BackupPref.saveData("toto")
+    BackupPref.readData
+    Toast.makeText(getActivity, BackupPref.readData.getOrElse(123).toString, Toast.LENGTH_LONG).show()
   }
 }
