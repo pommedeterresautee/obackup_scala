@@ -17,7 +17,7 @@ import rx.android.concurrency.AndroidSchedulers
  */
 class RxThread[T](o:Observable[T]) {
 
-  def setupThread[T] = {
+  def execAsync[T] = {
     o.subscribeOn(Schedulers.newThread)
       .observeOn(AndroidSchedulers.mainThread())
       .materialize

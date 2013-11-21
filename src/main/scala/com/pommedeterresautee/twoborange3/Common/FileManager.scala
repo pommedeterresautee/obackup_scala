@@ -41,6 +41,11 @@ object FileManager {
   def registerContext(context: Context) {
     mContext = context.getApplicationContext
   }
+  
+  private def getContext = {
+    require(mContext != null, "Context is not registered in FileManager")
+    mContext
+  }
 
   /**
    * Return the application path on the storage (SD Card / Internal Storage).
@@ -48,8 +53,7 @@ object FileManager {
    * @return path
    */
   def getExternalStorage: File = {
-    require(mContext != null, "Context is null when trying to get the ext storage path")
-    var externalPath: File = mContext.getExternalFilesDir(null)
+    var externalPath: File = getContext.getExternalFilesDir(null)
 
     if (externalPath == null) {
       externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -60,7 +64,7 @@ object FileManager {
     externalPath
   }
 
-  def getInternalStorage: File = new ContextWrapper(mContext).getFilesDir
+  def getInternalStorage: File =  new ContextWrapper(getContext).getFilesDir
 
   def getOnAndroidScript: File = new File(getInternalStorage, ONANDROID_FILENAME)
 
