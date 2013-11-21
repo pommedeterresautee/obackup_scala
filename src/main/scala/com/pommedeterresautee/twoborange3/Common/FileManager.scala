@@ -2,9 +2,13 @@ package com.pommedeterresautee.twoborange3.Common
 
 import java.lang.String
 import scala.Predef.String
+import java.io.File
+import android.os.Environment
+import android.content.{ContextWrapper, Context}
+import scala.Predef._
 
 object FileManager {
-  final val ONANDROID_FILENAME: String = "onandroid"
+  private final val ONANDROID_FILENAME: String = "onandroid"
   final val DEDUPE_FILENAME: String = "dedupe"
   final val BUSYBOX_FILENAME: String = "busybox"
   final val MKYAFFS2IMAGE_FILENAME: String = "mkyaffs2image"
@@ -30,7 +34,34 @@ object FileManager {
   private final val TEST_CWM_FILE: String = "cwm_test_path"
   private var pathStorageForTheSession: String = null
   private var storeTEMPCWMPathFromPref: String = ""
+  private var mContext: Context = _
 
 
+
+  def registerContext(context: Context) {
+    mContext = context.getApplicationContext
+  }
+
+  /**
+   * Return the application path on the storage (SD Card / Internal Storage).
+   *
+   * @return path
+   */
+  def getExternalStorage: File = {
+    require(mContext != null, "Context is null when trying to get the ext storage path")
+    var externalPath: File = mContext.getExternalFilesDir(null)
+
+    if (externalPath == null) {
+      externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    }
+    if (!externalPath.exists) {
+      externalPath.mkdirs
+    }
+    externalPath
+  }
+
+  def getInternalStorage: File = new ContextWrapper(mContext).getFilesDir
+
+  def getOnAndroidScript: File = new File(getInternalStorage, ONANDROID_FILENAME)
 
 }

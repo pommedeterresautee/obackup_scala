@@ -12,6 +12,8 @@ import android.widget.{TextView, BaseAdapter, AdapterView, ListView}
 import android.widget.AdapterView.OnItemClickListener
 import android.util.TypedValue
 import com.pommedeterresautee.twoborange3.{FONT, InterfaceFunctions, R}
+import com.pommedeterresautee.twoborange3.Section.Terminal.TerminalActivity
+import com.pommedeterresautee.twoborange3.Section.Backups.BackupActivity
 
 /**
  * Trait to add a side menu to an Activity
@@ -28,7 +30,7 @@ trait SideMenu extends Activity {
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     //Init side menu content
-    mMenuList = List[SideMenuItem](SideMenuItem(R.string.app_name, R.drawable.ic_drawer, null))
+    mMenuList = List(SideMenuItem(R.string.app_name, R.drawable.ic_drawer, new Intent(this, classOf[TerminalActivity])), SideMenuItem(R.string.app_name, R.drawable.ic_drawer, new Intent(this, classOf[BackupActivity])))
     getActionBar.setDisplayHomeAsUpEnabled(true)
     getActionBar.setHomeButtonEnabled(true)
   }

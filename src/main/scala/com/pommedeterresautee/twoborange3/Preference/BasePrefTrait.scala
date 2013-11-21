@@ -5,6 +5,9 @@ import android.preference.PreferenceManager
 import scala.Boolean
 import scala.Long
 
+/**
+ * Manage the application preferences
+ */
 trait BasePrefTrait {
 
   private var mContext: Context = _
@@ -18,22 +21,25 @@ trait BasePrefTrait {
   }
 
   protected def getBoolean(keyID: Int): Option[Boolean] = {
-    read(keyID, classOf[Boolean]).asInstanceOf[Option[Boolean]]
+    get(keyID, classOf[Boolean]).asInstanceOf[Option[Boolean]]
   }
 
   protected def getLong(keyID: Int): Option[Long] = {
-    read(keyID, classOf[Long]).asInstanceOf[Option[Long]]
+    get(keyID, classOf[Long]).asInstanceOf[Option[Long]]
   }
 
   protected def getInteger(keyID: Int): Option[Int] = {
-    read(keyID, classOf[Int]).asInstanceOf[Option[Int]]
+    get(keyID, classOf[Int]).asInstanceOf[Option[Int]]
+  }
+  protected def getFloat(keyID: Int): Option[Float] = {
+    get(keyID, classOf[Float]).asInstanceOf[Option[Float]]
   }
 
   protected def getString(keyID: Int): Option[String] = {
-    read(keyID, classOf[String]).asInstanceOf[Option[String]]
+    get(keyID, classOf[String]).asInstanceOf[Option[String]]
   }
 
-  private def read[T](keyID: Int, returnType: T): Option[T] = {
+  private def get[T](keyID: Int, returnType: T): Option[T] = {
     require(mContext != null, "Context is not registered.")
     require(pref != null, classOf[SharedPreferences].getSimpleName + " is null.")
     val key: String = mContext.getString(keyID)
@@ -43,11 +49,11 @@ trait BasePrefTrait {
       case t if t == classOf[Int] => pref.getInt(key, -1).asInstanceOf[T]
       case t if t == classOf[Long] => pref.getLong(key, -1).asInstanceOf[T]
       case t if t == classOf[Boolean] => pref.getBoolean(key, false).asInstanceOf[T]
+      case t if t == classOf[Float] => pref.getFloat(key, -1).asInstanceOf[T]
       case _ => throw new IllegalArgumentException("Preference return type is unknown: " + returnType.getClass.getSimpleName)
     }
     result match {
-      case -1 => None
-      case "" => None
+      case r if r == -1l || r == -1f || r == -1 || r == "" => None
       case _ => Option(result)
     }
   }

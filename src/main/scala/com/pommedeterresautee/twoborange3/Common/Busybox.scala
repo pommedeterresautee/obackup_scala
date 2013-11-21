@@ -20,7 +20,10 @@ object Busybox {
    * @return a Rx Unsubscribe object
    */
   def startCopyAsyncBusyboxIfNeeded(implicit context: Context) = {
-    val unsubsb = Observable(copyBusyBoxIfNotYetDone(context.getApplicationContext))
+    val unsubsb = Observable{
+      copyBusyBoxIfNotYetDone(context.getApplicationContext)
+    }
+      .subscribeOn(Schedulers.newThread)
       .observeOn(Schedulers.currentThread)
       .materialize
       .subscribe(n => n match {
