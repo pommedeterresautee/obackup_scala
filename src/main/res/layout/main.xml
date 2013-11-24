@@ -4,12 +4,10 @@
     android:layout_height="match_parent"
     >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/left_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.pommedeterresautee.twoborange3.Section.Terminal.TerminalFragment"
-        />
+        android:layout_height="match_parent"/>
 
     <include layout="@layout/sidemenu_listview" />
 

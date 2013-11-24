@@ -3,7 +3,7 @@ package com.pommedeterresautee.twoborange3.Common
 import android.app.Activity
 import android.support.v4.widget.DrawerLayout
 
-import android.support.v4.app.ActionBarDrawerToggle
+import android.support.v4.app.{FragmentActivity, ActionBarDrawerToggle}
 import android.support.v4.view.GravityCompat
 import android.content.Intent
 import android.view.{MenuItem, Gravity, ViewGroup, View}
@@ -13,12 +13,12 @@ import android.widget.AdapterView.OnItemClickListener
 import android.util.TypedValue
 import com.pommedeterresautee.twoborange3.{FONT, InterfaceFunctions, R}
 import com.pommedeterresautee.twoborange3.Section.Terminal.TerminalActivity
-import com.pommedeterresautee.twoborange3.Section.Backups.BackupActivity
+import com.pommedeterresautee.twoborange3.Section.InstallScript.InstallScriptActivity
 
 /**
  * Trait to add a side menu to an Activity
  */
-trait SideMenu extends Activity {
+trait SideMenu extends FragmentActivity {
 
   case class SideMenuItem(mTitle: Int, mIcon: Int, mIntent: Intent, mShouldFinishCurrentActivity: Boolean = true)
 
@@ -30,7 +30,7 @@ trait SideMenu extends Activity {
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     //Init side menu content
-    mMenuList = List(SideMenuItem(R.string.app_name, R.drawable.ic_drawer, new Intent(this, classOf[TerminalActivity])), SideMenuItem(R.string.app_name, R.drawable.ic_drawer, new Intent(this, classOf[BackupActivity])))
+    mMenuList = List(SideMenuItem(R.string.terminal_activity_title, R.drawable.ic_drawer, new Intent(this, classOf[TerminalActivity])), SideMenuItem(R.string.script_installation_activity_title, R.drawable.ic_drawer, new Intent(this, classOf[InstallScriptActivity])))
     getActionBar.setDisplayHomeAsUpEnabled(true)
     getActionBar.setHomeButtonEnabled(true)
   }

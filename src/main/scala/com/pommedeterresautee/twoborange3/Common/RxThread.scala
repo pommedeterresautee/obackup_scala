@@ -4,6 +4,7 @@ import rx.lang.scala.Observable
 import rx.lang.scala.concurrency.Schedulers
 import rx.lang.scala.ImplicitFunctionConversions._
 import rx.android.concurrency.AndroidSchedulers
+import language.implicitConversions
 
 /**
  * Do all the registration / observation stuff:<br>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="busybox_installed">Busybox installation is finished</string>
+    <string name="busybox_error_installation">Error during Busybox installation: %1$s</string>
+    <string name="script_update_title">Script update</string>
+    <string name="script_update_message">Version %1$s of the script is available, do you want to get it?</string>
+    <string name="download">Download</string>
+    <string name="installed">Installed</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_message">Error: %1$s</string>
+    <string name="brand">Brand</string>
+    <string name="model">Model</string>
+    <string name="tech_name">Technical name</string>
+    <string name="backup_type">Backup type</string>
+    <string name="continue_button">Continue</string>
+    <string name="configuration">Configuration</string>
+    <string name="script_installation_activity_title">Script installation</string>
+    <string name="server">Server</string>
+
+</resources>

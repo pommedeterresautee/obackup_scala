@@ -1,11 +1,10 @@
 package com.pommedeterresautee.twoborange3.Common
 
 import java.lang.String
-import scala.Predef.String
+import scala.Predef._
 import java.io.File
 import android.os.Environment
 import android.content.{ContextWrapper, Context}
-import scala.Predef._
 
 object FileManager {
   private final val ONANDROID_FILENAME: String = "onandroid"
@@ -68,4 +67,5 @@ object FileManager {
 
   def getOnAndroidScript: File = new File(getInternalStorage, ONANDROID_FILENAME)
 
+//  def isNewVersionAvailable : ((String, String)) => Boolean = (site: String, internal:String) => site != internal
 }

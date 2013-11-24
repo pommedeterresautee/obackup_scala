@@ -3,6 +3,5 @@
     <string name="app_name">OBackup</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="busybox_installed">Busybox installation is finished</string>
-    <string name="busybox_error_installation">Error during Busybox installation: %1$s</string>
+
 </resources>

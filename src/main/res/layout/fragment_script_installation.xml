@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2013
+  ~ This file is part of 2BOrange Android application and is the property of its Author, Michaël BENESTY.
+  ~
+  ~ You may be sued by the Author for any violation of this property.
+  ~
+  ~ Using this file in any way without an explicit authorization of the Author is a violation of this property.
+  -->
+
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width = "match_parent"
+            android:layout_height = "match_parent" 
+            android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Online Nandroid"
+        style="@style/category_title"
+        />
+
+        <Button
+            android:id="@+id/button_installed_onandroid_script_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:textAllCaps="true"
+            />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            >
+            
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/installed"
+            style="@style/property_title"
+            />
+            
+            <TextView
+                android:id="@+id/script_version_installed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                tools:text="1.10"
+                android:textColor="@color/clear_gray"
+                android:textSize="30sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            >
+            
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/server"
+            style="@style/property_title"
+            />
+
+            <TextView
+                android:id="@+id/script_version_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textColor="@color/clear_gray"
+                tools:text="1.12"
+                
+                />
+    </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+        </LinearLayout>
+    </LinearLayout>
+    
+
+    
+    <LinearLayout android:layout_width = "match_parent"
+                    android:layout_height = "0dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+        android:orientation="vertical"                    
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+        <TextView android:layout_width = "0dp"
+                  android:layout_height = "wrap_content"
+                  android:text = "Partition layout"
+            android:layout_weight="1"
+            android:id = "@+id/device_selection_explanation"
+            style="@style/category_title"
+            />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Install"
+                android:textAllCaps="true"
+                />
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1"
+            >
+            <TextView android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:text = "@string/brand"
+                android:textColor = "@color/clear_gray"
+                android:id = "@+id/device_selection_brand_text"
+                style="@style/property_title"
+                />
+
+            <Spinner android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/device_choice_brand_spinner" />
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1"
+            >
+            <TextView android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:text = "@string/model"
+                android:textColor = "@color/clear_gray"
+                android:id = "@+id/device_selection_model_text"
+                style="@style/property_title"
+                />
+
+            <Spinner android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/device_choice_model_spinner" />
+
+        </LinearLayout>
+
+        </LinearLayout>
+      
+        <LinearLayout android:layout_width = "match_parent"
+                      android:layout_height = "wrap_content"
+                      android:orientation = "horizontal"
+                      android:gravity = "center"
+            >
+            
+            <TextView android:layout_width = "wrap_content"
+                      android:layout_height = "wrap_content"
+                      android:text = "@string/tech_name"
+                      android:textSize = "15sp"
+                      android:textColor = "@color/middle_gray"
+                      android:id = "@+id/device_selection_tech_name_text" />
+
+            <TextView android:layout_width = "wrap_content"
+                      android:layout_height = "wrap_content"
+                      android:textSize = "15sp"
+                      tools:text="[Some Model Name]"
+                      android:textColor = "@color/clear_gray"
+                      android:layout_margin = "@dimen/MarginGl"
+                      android:id = "@+id/device_technical_name" />
+        </LinearLayout >
+
+
+    </LinearLayout >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+        <TextView android:layout_width = "0dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight="1"
+            android:text = "@string/backup_type"
+            style="@style/category_title"
+            />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Setup"
+                android:textAllCaps="true"
+                />
+
+            </LinearLayout>
+
+        <Spinner android:layout_width = "match_parent"
+                 android:layout_height = "wrap_content"
+                 android:entries = "@array/BackupTypes"
+                 android:entryValues = "@array/BackupValues"
+                 android:id = "@+id/device_selection_backup_type_spinner"
+            />
+
+
+    </LinearLayout>
+</LinearLayout>
