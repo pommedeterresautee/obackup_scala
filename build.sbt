@@ -41,7 +41,8 @@ libraryDependencies ++= Seq (
   "com.google.api-client" % "google-api-client" % "latest.integration" intransitive(),
   "com.google.api-client" % "google-api-client-android" % "latest.integration"  intransitive(),
   "com.google.http-client" % "google-http-client-jackson" % "latest.integration" intransitive(),
-  "com.google.http-client" % "google-http-client-gson" % "latest.integration" intransitive()
+  "com.google.http-client" % "google-http-client-gson" % "latest.integration" intransitive(),
+  "com.typesafe.play" %% "play-json" % "2.2.0"
 )
 
 ideaExcludeFolders ++= Seq (
@@ -57,7 +58,7 @@ proguardCache in Android ++= Seq (
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android",
   ProguardCache("play") % "play" %% "play-json",
-  ProguardCache("org.joda") % "joda-time" %% "joda-time"
+  ProguardCache("org.joda.time") % "joda-time" %% "joda-time"
 )
 
 

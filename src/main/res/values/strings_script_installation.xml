@@ -7,7 +7,7 @@
     <string name="download">Download</string>
     <string name="installed">Installed</string>
     <string name="cancel">Cancel</string>
-    <string name="error_message">Error: %1$s</string>
+    <string name="connection_error_message">Connection error: %1$s</string>
     <string name="brand">Brand</string>
     <string name="model">Model</string>
     <string name="tech_name">Technical name</string>
@@ -16,5 +16,6 @@
     <string name="configuration">Configuration</string>
     <string name="script_installation_activity_title">Script installation</string>
     <string name="server">Server</string>
+    <string name="update">Update</string>
 
 </resources>

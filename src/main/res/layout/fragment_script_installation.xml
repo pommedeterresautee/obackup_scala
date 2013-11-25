@@ -41,7 +41,7 @@
             android:id="@+id/button_installed_onandroid_script_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Update"
+            android:text="@string/update"
             android:textAllCaps="true"
             />
 

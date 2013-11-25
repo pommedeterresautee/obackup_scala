@@ -69,7 +69,7 @@ object Busybox {
   private def copyBusyBox(context: Context) = {
       val busybox: File = getInternalBusybox(context)
       if (busybox.exists) {
-        require(busybox.delete, "Impossible to delete existing busybox")
+//        require(busybox.delete, "Impossible to delete existing busybox")
       }
       val fos: FileOutputStream = context.openFileOutput(BUSYBOX_FILENAME_EXTERN, Context.MODE_PRIVATE)
       val is: InputStream = context.getAssets.open(BUSYBOX_FILENAME_INTERN)

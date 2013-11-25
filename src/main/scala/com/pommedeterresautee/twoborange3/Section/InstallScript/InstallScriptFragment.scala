@@ -3,20 +3,20 @@ package com.pommedeterresautee.twoborange3.Section.InstallScript
 import android.support.v4.app.Fragment
 import android.view.{View, ViewGroup, LayoutInflater}
 import android.os.Bundle
-import android.widget.{Toast, EditText}
 import com.pommedeterresautee.twoborange3.{TR, TypedViewHolder, R}
-import com.pommedeterresautee.twoborange3.Preference.BackupPref
-import com.pommedeterresautee.twoborange3.Common.{FileManager, ScriptManager}
+import com.pommedeterresautee.twoborange3.Common.ScriptManager
 import rx.lang.scala.Notification.{OnError, OnNext}
 import rx.lang.scala.Subscription
 import com.pommedeterresautee.twoborange3.Common.RxThread._
 import org.scaloid.common._
-import scala.collection.mutable.ArrayBuffer
+import com.pommedeterresautee.twoborange3.Common.MyScalaHelpers._
+import rx.lang.scala.subscriptions.CompositeSubscription
+import com.pommedeterresautee.twoborange3.Common.ScriptManager.Device
 
 
 class InstallScriptFragment extends Fragment with TypedViewHolder {
 
-  val mUnsubscribe = ArrayBuffer[Subscription]()
+  val mUnsubscribe = CompositeSubscription()
   var mLayout: View = _
 
   def findViewById(id: Int): View = mLayout.findViewById(id)
@@ -25,59 +25,62 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     mLayout = inflater.inflate(R.layout.fragment_script_installation, container, false)
-
-    findView(TR.`button_installed_onandroid_script_update`).onClick{
-      mUnsubscribe += ScriptManager.saveLastScript.execAsync.subscribe(
-        _ match {
-          case OnNext(t) => toast(getString(R.string.installed))
-          case OnError(e) => toast(getString(R.string.error_message, e.getLocalizedMessage))
-    })
-      ()
-    }
     mLayout
   }
 
   override def onStart() {
     super.onStart()
-    BackupPref.register(getActivity)
-    FileManager.registerContext(getActivity)
-    BackupPref.saveData("toto")
-    BackupPref.readData
+    mUnsubscribe += refreshScriptVersion
+    mUnsubscribe += setPartitionLayoutViews
+  }
 
-    mUnsubscribe += ScriptManager.getAsyncLastVersion
-      .zip(ScriptManager.getLocalScriptVersion)
-      .execAsync
-      .subscribe {
-      _ match {
-        case OnNext((site, internal)) =>{
-                    findView(TR.`script_version_server`).setText(site)
-                    findView(TR.script_version_installed).setText(internal)
-//          findView(TR.button_installed_onandroid_script_update).setVisibility(if(site == internal) View.GONE else View.VISIBLE)
+  def setPartitionLayoutViews() = ScriptManager.getAsyncLayoutTable
+    .execAsync
+    .subscribe(_ match {
+    case OnNext(Some(list:Seq[Device])) => CInfo(list.head.brandName)
+    case OnError(e) => CAlert(getString(R.string.connection_error_message, e.getLocalizedMessage))
+    case _ => CAlert(getString(R.string.connection_error_message))
+  })
+
+  def refreshScriptVersion: Subscription = ScriptManager.getAsyncLastVersion
+    .zip(ScriptManager.getLocalScriptVersion)
+    .execAsync
+    .subscribe {
+    _ match {
+      case OnNext((site, internal)) =>
+        findView(TR.`script_version_server`).setText(site)
+        findView(TR.script_version_installed).setText(internal)
+        val b = findView(TR.button_installed_onandroid_script_update)
+        if(site != internal){
+          b.setText(R.string.update)
+          b.onClick{mUnsubscribe += updateScriptButton; ()}
+        } else {
+          b.setText("Remove")
+          b.onClick{mUnsubscribe += removeScriptButton; ()}
         }
-        case OnError(err) => {
-          longToast(getString(R.string.error_message, err.getMessage))
-          findView(TR.button_installed_onandroid_script_update).setVisibility(View.GONE)
-        }
-      }
+      case OnError(err) =>
+        CAlert(getString(R.string.connection_error_message, err.getLocalizedMessage))
+        findView(TR.button_installed_onandroid_script_update).setVisibility(View.GONE)
     }
   }
 
-  def chooseLayout = {
-    val s = spinnerDialog("Downloading", "Getting the partition layout table")
-    ScriptManager.getTestListOfDevices
-      .map(d => d.brandName)
-      .toSeq
-      .execAsync
-      .subscribe {
-      _ match {
-        case OnNext(listOfBrand) =>
-          s.dismiss()
-      }
-    }
-  }
+  def updateScriptButton() =  ScriptManager.saveLastScript.execAsync.subscribe(
+    _ match {
+      case OnNext(t) => CInfo(getString(R.string.installed))
+        mUnsubscribe += refreshScriptVersion;
+      case OnError(e) => CAlert(getString(R.string.connection_error_message, e.getLocalizedMessage))
+    })
+
+  def removeScriptButton() =  ScriptManager.deleteScript.execAsync.subscribe(
+    _ match {
+      case OnNext(t) => CInfo("Deleted")
+        mUnsubscribe += refreshScriptVersion;
+      case OnError(e) => CAlert("Error:" + e.getLocalizedMessage)
+    })
+
 
   override def onDetach() {
     super.onDetach()
-    mUnsubscribe.filter(!_.isUnsubscribed).foreach(_.unsubscribe())
+    mUnsubscribe.unsubscribe()
   }
 }

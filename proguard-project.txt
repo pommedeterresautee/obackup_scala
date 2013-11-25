@@ -3,7 +3,10 @@
 -keepattributes SourceFile,LineNumberTable
 
 ##---------------Begin: proguard configuration common for all Android apps ----------
--optimizationpasses 5
+
+#re enable before release
+#-optimizationpasses 5
+
 -dontskipnonpubliclibraryclasses
 -dontskipnonpubliclibraryclassmembers
 -dontpreverify
@@ -12,7 +15,9 @@
 #-printseeds seeds.txt
 #-printusage unused.txt
 -printmapping mapping.txt
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+#re enable before release
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
 -allowaccessmodification
 -repackageclasses ''
