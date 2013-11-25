@@ -1,0 +1,8 @@
+#!/bin/bash
+# system_page - A script to display the number of methods in a JAR / APK file
+
+temp_destination="$(dirname $1)/temp.dex"
+rm $temp_destination
+/opt/android-studio/sdk/build-tools/18.0.0/dx --dex --output=$temp_destination $1
+echo "number of methods: "
+cat $temp_destination | head -c 92 | tail -c 4 | hexdump -e '1/4 "%d\n"'

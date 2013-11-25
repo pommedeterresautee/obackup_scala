@@ -18,7 +18,11 @@ scalacOptions in Compile += "-feature"
 // for non-ant-based projects, you'll need this for the specific build target:
 platformTarget in Android := "android-19"
 
-resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/")
+resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/",
+  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
+  "Mandubian repository snapshots" at "https://github.com/mandubian/mandubian-mvn/raw/master/snapshots/",
+  "Mandubian repository releases" at "https://github.com/mandubian/mandubian-mvn/raw/master/releases/"
+)
 
 libraryDependencies ++= Seq (
   "org.scaloid" %% "scaloid" % "latest.integration",
@@ -27,7 +31,7 @@ libraryDependencies ++= Seq (
   "com.netflix.rxjava" % "rxjava-android" % "latest.integration" intransitive(),
   "com.android.support" % "support-v4" % "19.0.0",
   "com.google.code.gson" % "gson" % "latest.integration",
-  "org.joda" % "joda-convert" % "1.5",
+  "org.joda" % "joda-convert" % "1.5" intransitive(),
   "joda-time" % "joda-time" % "2.3",
   "com.googlecode.json-simple" % "json-simple" % "1.1" intransitive(),
   "de.keyboardsurfer.android.widget" % "crouton" % "latest.integration" intransitive(),
@@ -47,11 +51,13 @@ ideaExcludeFolders ++= Seq (
     "project"
 )
 
-proguardCache in Android ++= Seq(
+proguardCache in Android ++= Seq (
   ProguardCache("org.scaloid") % "org.scaloid" %% "scaloid",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-core",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
-  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android"
+  ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android",
+  ProguardCache("play") % "play" %% "play-json",
+  ProguardCache("org.joda") % "joda-time" %% "joda-time"
 )
 
 

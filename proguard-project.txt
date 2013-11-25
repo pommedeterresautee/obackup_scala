@@ -4,7 +4,6 @@
 
 ##---------------Begin: proguard configuration common for all Android apps ----------
 -optimizationpasses 5
--dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -dontskipnonpubliclibraryclassmembers
 -dontpreverify
@@ -29,20 +28,6 @@
 -keep public class * extends android.preference.Preference
 -keep public class com.android.vending.licensing.ILicensingService
 -dontnote com.android.vending.licensing.ILicensingService
-
--keep class * implements java.io.Serializable
-
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    !static !transient <fields>;
-    !private <fields>;
-    !private <methods>;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
 
 # Preserve all native method names and the names of their classes.
 #-keepclasseswithmembernames class * {
@@ -87,28 +72,6 @@ public static final android.os.Parcelable$Creator *;
 -keep class com.google.gson.examples.android.model.** { *; }
 
 ##---------------End: proguard configuration for Gson ----------
-
-#Begin: proguard configuration for Action bar sherlock
--keep class android.support.v4.app.** { *; }
--keep interface android.support.v4.app.** { *; }
--keep class com.actionbarsherlock.** { *; }
--keep interface com.actionbarsherlock.** { *; }
-
-# keep a business class (add Serializable, so for now it s ok)
-#-keep public class com.pommedeterresautee.twoborange3.Network.API.Device.DeviceProperties { *; }
-
-# ormlite uses reflection
--keep class com.j256.**
--keepclassmembers class com.j256.** { *; }
--keep enum com.j256.** { *; }
--keepclassmembers enum com.j256.** { *; }
--keep interface com.j256.** { *; }
--keepclassmembers interface com.j256.** { *; }
-
-# admob already shrunk
--keep class com.admob.**
-
--assumenosideeffects class com.pommedeterresautee.twoborange3.StaticFunctions.Ln {<methods>;}
 
 #Bugsense
 -keep public class com.bugsense.*
@@ -170,3 +133,6 @@ public static final android.os.Parcelable$Creator *;
 
 #RxJava + Scala support
 -dontwarn rx.lang.scala.**, rx.subjects.UnsubscribeTester, rx.android.concurrency.**, rx.operators.**
+
+#Jackson complain
+-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
