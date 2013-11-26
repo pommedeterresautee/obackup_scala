@@ -209,8 +209,7 @@
                       android:layout_height = "wrap_content"
                       android:text = "@string/tech_name"
                       android:textSize = "15sp"
-                      android:textColor = "@color/middle_gray"
-                      android:id = "@+id/device_selection_tech_name_text" />
+                      android:textColor = "@color/middle_gray"/>
 
             <TextView android:layout_width = "wrap_content"
                       android:layout_height = "wrap_content"

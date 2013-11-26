@@ -15,6 +15,7 @@ import play.api.libs.json.Json
 object ScriptManager {
 
   case class Device(brandName:String, codeName: String, commercialName: String, var partitionName: Option[Seq[String]] = None) extends Ordered[Device]{
+
     override def toString = brandName + " (model: " + commercialName + ")\n" + partitionName.mkString(", ")
 
     def compare(that: Device): Int = this.brandName compareTo that.brandName match {
@@ -22,6 +23,7 @@ object ScriptManager {
         case compareBrand => compareBrand
       }
   }
+
   implicit val jsonDeviceFormat = Json.format[Device]
 
 
@@ -31,14 +33,17 @@ object ScriptManager {
 
   private val jsonDevices = new URL("https://raw.github.com/pommedeterresautee/onandroidparser/master/example_result/onandroid.json")
 
-  def getAsyncLayoutTable = getAsyncUrl(jsonDevices).map{s:String => Json.fromJson[Seq[Device]](Json.parse(s)).asOpt}
+  def getAsyncLayoutTable = getAsyncUrl(jsonDevices).map(i => i).map{s:Option[String] => Json.fromJson[Seq[Device]](Json.parse(s.get)).asOpt}
 
   def getAsyncLastVersion = getAsyncUrl(urlVersion)
 
-  private def getAsyncUrl(url: URL):Observable[String] = Observable {
-    (observer: Observer[String]) => {
-      val io = Source.fromURL(url)
-      val result = io.getLines().mkString
+  private def getAsyncUrl(url: URL):Observable[Option[String]] = Observable {
+    (observer: Observer[Option[String]]) => {
+      val urlCon = url.openConnection()
+      urlCon.setConnectTimeout(5000)
+      urlCon.setReadTimeout(5000)
+      val io = Source.fromInputStream(urlCon.getInputStream)
+      val result = Option(io.getLines().mkString.split("\n")(0))
       io.close()
       observer.onNext(result)
       observer.onCompleted()
@@ -75,89 +80,16 @@ object ScriptManager {
    * 
    * @return the version number of the installed script
    */
-  def getLocalScriptVersion: Observable[String] = Observable{
+  def getLocalScriptVersion: Observable[Option[String]] = Observable{
     import scala.sys.process._
-    (observer: Observer[String]) => {
+    (observer: Observer[Option[String]]) => {
       val scriptFile = FileManager.getOnAndroidScript      
       if(scriptFile.exists() && scriptFile.canExecute && scriptFile.length() > 0){
         val result = (FileManager.getOnAndroidScript.getAbsolutePath + " --version").!!.split("\n")(0)
-        observer.onNext(result)
-      } else observer.onNext("")
+        observer.onNext(Some(result))
+      } else observer.onNext(None)
       observer.onCompleted()
       Subscription()
     }
   }
-
-
-//  def getMainDialog(mContext: Activity, devices:List[Device]): AlertDialog.Builder ={
-//
-//    val brandList = devices.map(_.brandName).distinct.sorted
-//
-//    def getFilteredDeviceList(brand:String) = devices.filter(_.brandName == brand).toList.sortWith(_ > _)
-//
-//    val inflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
-//
-//    val layout: ScrollView = inflater.inflate(R.layout.fragment_script_installation, null).asInstanceOf[ScrollView]
-//
-//    val brandAdapter: ArrayAdapter[String] = new ArrayAdapter[String](mContext, android.R.layout.simple_spinner_dropdown_item, brandList.toArray)
-//
-//
-//    val modelAdapter: ArrayAdapter[String] = new ArrayAdapter[String](mContext, android.R.layout.simple_spinner_dropdown_item, Array[String]())
-//
-//    val explanation: TextView = layout.findViewById(R.id.device_selection_explanation).asInstanceOf[TextView]
-//
-//    val technicalName: TextView = layout.findViewById(R.id.device_technical_name).asInstanceOf[TextView]
-//
-//    val brandSelection: Spinner = layout.findViewById(R.id.device_choice_brand_spinner).asInstanceOf[Spinner]
-//
-//    val modelSelection: Spinner = layout.findViewById(R.id.device_choice_model_spinner).asInstanceOf[Spinner]
-//
-//
-//    val recoverySelection: Spinner = layout.findViewById(R.id.device_selection_backup_type_spinner).asInstanceOf[Spinner]
-//
-//    explanation.setText("Complete supported list\nChoose your device model or click NOT LISTED button if you don't find it.")
-//
-//    brandSelection.setAdapter(brandAdapter)
-//
-//
-//    brandSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
-//      def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
-//        import collection.JavaConversions._
-//        if (position == 0) {
-////          refreshValidateButtonEnable(false)
-//        }
-//        modelAdapter.clear()
-//        modelAdapter.addAll(getFilteredDeviceList(brandList(position)).map(_.commercialName))
-//        modelAdapter.notifyDataSetChanged()
-//      }
-//
-//      def onNothingSelected(parent: AdapterView[_]) {
-//      }
-//    })
-//
-//    modelSelection.setAdapter(modelAdapter)
-//
-//    modelSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
-//      def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
-//        val brand: String = brandList(brandSelection.getSelectedItemPosition)
-//        val techName: String = if (position == 0) "no selection" else getFilteredDeviceList(brand)(position).codeName
-//        technicalName.setText(techName + ")")
-////        if (dialog != null) {
-////          refreshValidateButtonEnable(position > 0)
-////        }
-//      }
-//
-//      def onNothingSelected(parent: AdapterView[_]) {
-//      }
-//    })
-//
-////    recoverySelection.setSelection(mBackupPref.getBackupTypePosition)
-//
-//    new AlertDialog.Builder(mContext).setTitle(R.string.configuration).setView(layout).setCancelable(false).setPositiveButton(R.string.continue_button, new DialogInterface.OnClickListener {
-//      def onClick(dialog: DialogInterface, which: Int) {
-//
-//      }
-//    })
-//  }
-
 }

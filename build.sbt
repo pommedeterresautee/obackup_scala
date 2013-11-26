@@ -57,7 +57,6 @@ proguardCache in Android ++= Seq (
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-core",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android",
-  ProguardCache("play") % "play" %% "play-json",
   ProguardCache("org.joda.time") % "joda-time" %% "joda-time"
 )
 
