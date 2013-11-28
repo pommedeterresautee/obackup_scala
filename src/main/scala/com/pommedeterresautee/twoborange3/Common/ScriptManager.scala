@@ -43,11 +43,9 @@ object ScriptManager {
   
   def getAsyncPartitionLayout(deviceName:String) = getAsyncUrl(partitionLayoutBase + deviceName)
 
-  def getAsyncLayoutTable:Observable[Option[Seq[Device]]] = getAsyncUrl(jsonDevices).map{json:Option[String] =>
+  def getAsyncLayoutTable:Observable[Seq[Device]] = getAsyncUrl(jsonDevices).map{json:Option[String] =>
     import MyJsonProtocol._
-    val temp = json.get.asJson
-    val jsonAst = temp.convertTo[Seq[Device]]
-    Option(jsonAst)
+    json.get.asJson.convertTo[Seq[Device]]
   }
 
   def getAsyncLastVersion = getAsyncUrl(urlVersion)
@@ -118,24 +116,15 @@ object ScriptManager {
   private def isMTDDevice: Boolean = {
     Source.fromFile("/proc/partitions").mkString("\n").contains("mtdblock1")
   }
-  
-  case class DevicePartitionMapLayout(var system:String ="", var data:String = "", var cache:String = "")
 
-  private def getDevicesPartition:DevicePartitionMapLayout = {
+
+  private def getDevicesPartition: Map[String, String] = {
     import scala.collection.JavaConverters._
-    val devicePart = DevicePartitionMapLayout()
     RootTools
       .getMounts
       .asScala
-      .map { mount => 
-        val blockDevice = mount.getDevice.getAbsoluteFile
-        mount.getMountPoint.getAbsolutePath match {
-        case "/system" => devicePart.system = blockDevice.getCanonicalFile.getName
-        case "/data" => devicePart.data = blockDevice.getCanonicalFile.getName
-        case "/cache" => devicePart.cache = blockDevice.getCanonicalFile.getName    
-        }
-      }    
-    devicePart
+      .map(mount => (mount.getMountPoint.getAbsolutePath, mount.getDevice.getCanonicalFile.getName))
+    .toMap
   }
 
 

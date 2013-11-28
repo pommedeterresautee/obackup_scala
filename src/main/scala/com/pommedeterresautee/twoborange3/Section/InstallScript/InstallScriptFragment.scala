@@ -42,7 +42,7 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
     ScriptManager.getAsyncLayoutTable
       .execAsync
       .subscribe(_ match {
-      case OnNext(Some(listOfDevices)) =>
+      case OnNext(listOfDevices) =>
         import scala.language.postfixOps
         brandSpinner.setAdapter(SArrayAdapter(("Select" :: listOfDevices.map(_.brandName).distinct.sorted.toList).toArray).dropDownStyle(_.textSize(15 dip)))
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
@@ -81,11 +81,6 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
             }
           }
         })
-      case OnNext(None) =>
-        val error = getString(R.string.connection_error_message, "No data")
-        CAlert(error)
-        buttonInstall.onClick(CAlert(error))
-        techName.setText(error)
       case OnError(e) =>
         val error = getString(R.string.connection_error_message, e.getLocalizedMessage)
         CAlert(error)
