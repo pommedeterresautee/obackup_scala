@@ -5,40 +5,56 @@ import java.io.{FileOutputStream, File}
 import java.net.URL
 
 
-import rx.lang.scala.{Observer, Observable}
-import rx.lang.scala.subscriptions.Subscription
-import scala.Predef.String
+import rx.lang.scala.{Subscription, Observer, Observable}
 
-import play.api.libs.json.Json
+
+import scala.Predef.String
+import com.stericson.RootTools.RootTools
+import scala.collection.immutable._
+import scala.Some
+import spray.json._
+import DefaultJsonProtocol._
 
 
 object ScriptManager {
 
-  case class Device(brandName:String, codeName: String, commercialName: String, var partitionName: Option[Seq[String]] = None) extends Ordered[Device]{
-
-    override def toString = brandName + " (model: " + commercialName + ")\n" + partitionName.mkString(", ")
-
-    def compare(that: Device): Int = this.brandName compareTo that.brandName match {
+  case class Device(brandName:String, codeName: String, commercialName: String, partitionTable:Map[String, String]) extends Ordered[Device]{
+    override def toString = brandName + " (model: " + commercialName + ")\n" + partitionTable.mkString(", ")
+    override def compare(that: Device): Int = this.brandName compareTo that.brandName match {
         case 0 => commercialName.compareTo(that.commercialName)
         case compareBrand => compareBrand
       }
   }
 
-  implicit val jsonDeviceFormat = Json.format[Device]
+//  case class Color(name: String, red: Int, green: Int, blue: Int)
+
+  object MyJsonProtocol extends DefaultJsonProtocol {
+    implicit val colorFormat = jsonFormat4(Device)
+  }
 
 
-  private val urlVersion = new URL("https://raw.github.com/ameer1234567890/OnlineNandroid/master/version")
+  private val urlVersion = "https://raw.github.com/ameer1234567890/OnlineNandroid/master/version"
 
-  private val lastScript = new URL("https://raw.github.com/ameer1234567890/OnlineNandroid/master/onandroid")
+  private val lastScript = "https://raw.github.com/ameer1234567890/OnlineNandroid/master/onandroid"
 
-  private val jsonDevices = new URL("https://raw.github.com/pommedeterresautee/onandroidparser/master/example_result/onandroid.json")
+  private val jsonDevices = "https://raw.github.com/pommedeterresautee/onandroidparser/master/example_result/onandroid.json"
 
-  def getAsyncLayoutTable = getAsyncUrl(jsonDevices).map(i => i).map{s:Option[String] => Json.fromJson[Seq[Device]](Json.parse(s.get)).asOpt}
+  private val partitionLayoutBase = "https://raw.github.com/ameer1234567890/OnlineNandroid/master/part_layouts/raw/partlayout4nandroid."
+  
+  def getAsyncPartitionLayout(deviceName:String) = getAsyncUrl(partitionLayoutBase + deviceName)
+
+  def getAsyncLayoutTable:Observable[Option[Seq[Device]]] = getAsyncUrl(jsonDevices).map{json:Option[String] =>
+    import MyJsonProtocol._
+    val temp = json.get.asJson
+    val jsonAst = temp.convertTo[Seq[Device]]
+    Option(jsonAst)
+  }
 
   def getAsyncLastVersion = getAsyncUrl(urlVersion)
 
-  private def getAsyncUrl(url: URL):Observable[Option[String]] = Observable {
+  private def getAsyncUrl(urlString: String):Observable[Option[String]] = Observable {
     (observer: Observer[Option[String]]) => {
+      val url = new URL(urlString)
       val urlCon = url.openConnection()
       urlCon.setConnectTimeout(5000)
       urlCon.setReadTimeout(5000)
@@ -54,7 +70,7 @@ object ScriptManager {
   def saveLastScript = Observable{
     (observer: Observer[File]) => {
     val scriptFile = FileManager.getOnAndroidScript
-    val is = lastScript.openStream()
+    val is = new URL(lastScript).openStream()
     val fos = new FileOutputStream(scriptFile)
     val dataToWrite = new Array[Byte](1024)
     Iterator
@@ -92,4 +108,35 @@ object ScriptManager {
       Subscription()
     }
   }
+
+  /**
+   * Check if a device is a MTD one.
+   * MTD devices don't need partition layout file.
+   *
+   * @return true if it is a MTD.
+   */
+  private def isMTDDevice: Boolean = {
+    Source.fromFile("/proc/partitions").mkString("\n").contains("mtdblock1")
+  }
+  
+  case class DevicePartitionMapLayout(var system:String ="", var data:String = "", var cache:String = "")
+
+  private def getDevicesPartition:DevicePartitionMapLayout = {
+    import scala.collection.JavaConverters._
+    val devicePart = DevicePartitionMapLayout()
+    RootTools
+      .getMounts
+      .asScala
+      .map { mount => 
+        val blockDevice = mount.getDevice.getAbsoluteFile
+        mount.getMountPoint.getAbsolutePath match {
+        case "/system" => devicePart.system = blockDevice.getCanonicalFile.getName
+        case "/data" => devicePart.data = blockDevice.getCanonicalFile.getName
+        case "/cache" => devicePart.cache = blockDevice.getCanonicalFile.getName    
+        }
+      }    
+    devicePart
+  }
+
+
 }

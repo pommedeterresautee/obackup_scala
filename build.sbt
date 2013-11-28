@@ -19,9 +19,7 @@ scalacOptions in Compile += "-feature"
 platformTarget in Android := "android-19"
 
 resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/",
-  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "Mandubian repository snapshots" at "https://github.com/mandubian/mandubian-mvn/raw/master/snapshots/",
-  "Mandubian repository releases" at "https://github.com/mandubian/mandubian-mvn/raw/master/releases/"
+  "spray" at "http://repo.spray.io/"
 )
 
 libraryDependencies ++= Seq (
@@ -42,7 +40,7 @@ libraryDependencies ++= Seq (
   "com.google.api-client" % "google-api-client-android" % "latest.integration"  intransitive(),
   "com.google.http-client" % "google-http-client-jackson" % "latest.integration" intransitive(),
   "com.google.http-client" % "google-http-client-gson" % "latest.integration" intransitive(),
-  "com.typesafe.play" %% "play-json" % "2.2.0"
+  "io.spray" %%  "spray-json" % "1.2.5"
 )
 
 ideaExcludeFolders ++= Seq (
@@ -57,7 +55,8 @@ proguardCache in Android ++= Seq (
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-core",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android",
-  ProguardCache("org.joda.time") % "joda-time" %% "joda-time"
+  ProguardCache("org.joda.time") % "joda-time" %% "joda-time",
+  ProguardCache("play") % "play" %% "play-json"
 )
 
 

@@ -142,5 +142,5 @@ public static final android.os.Parcelable$Creator *;
 #Jackson complain
 -dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 
-#Retrofit
--keep class retrofit.** { *; }
+#po
+-keep class com.pommedeterresautee.twoborange3.Common.** {*;}

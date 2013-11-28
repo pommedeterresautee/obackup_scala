@@ -140,9 +140,10 @@
             />
 
             <Button
+                android:id="@+id/button_install_partition_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Install"
+                android:text="@string/install"
                 android:textAllCaps="true"
                 />
 

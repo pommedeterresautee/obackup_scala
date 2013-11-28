@@ -34,37 +34,65 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
     mUnsubscribe += setPartitionLayoutViews
   }
 
-  def setPartitionLayoutViews() = ScriptManager.getAsyncLayoutTable
-    .execAsync
-    .subscribe(_ match {
+  def setPartitionLayoutViews() = {
+    val brandSpinner = findView(TR.device_choice_brand_spinner)
+    val modelSpinner = findView(TR.`device_choice_model_spinner`)
+    val buttonInstall = findView(TR.`button_install_partition_layout`)
+    val techName = findView(TR.`device_technical_name`)
+    ScriptManager.getAsyncLayoutTable
+      .execAsync
+      .subscribe(_ match {
+      case OnNext(Some(listOfDevices)) =>
+        import scala.language.postfixOps
+        brandSpinner.setAdapter(SArrayAdapter(("Select" :: listOfDevices.map(_.brandName).distinct.sorted.toList).toArray).dropDownStyle(_.textSize(15 dip)))
+        brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
+          def onNothingSelected(parent: AdapterView[_]) {}
 
-    case OnNext(Some(listOfDevices)) =>
-      import scala.language.postfixOps
-      val brandSpinner = findView(TR.device_choice_brand_spinner)
-      val modelSpinner = findView(TR.`device_choice_model_spinner`)
-      brandSpinner.setAdapter(SArrayAdapter(("Select" :: listOfDevices.map(_.brandName).distinct.sorted.toList).toArray).dropDownStyle(_.textSize(15 dip)))
-      brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
-        def onNothingSelected(parent: AdapterView[_]) {}
-        def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
-          if(position > 0){
-            modelSpinner.setAdapter(SArrayAdapter(("Select" :: listOfDevices.filter(_.brandName == brandSpinner.getSelectedItem.toString).map(_.commercialName).sorted.toList).toArray).dropDownStyle(_.textSize(15 dip)))
-          } else {
-            modelSpinner.setAdapter(SArrayAdapter("Select").dropDownStyle(_.textSize(15 dip)))
+          //no use
+          def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
+            if (position > 0) {
+              modelSpinner.setAdapter(SArrayAdapter(("Select" :: listOfDevices.filter(_.brandName == brandSpinner.getSelectedItem.toString).map(_.commercialName).sorted.toList).toArray).dropDownStyle(_.textSize(15 dip)))
+            } else {
+              modelSpinner.setAdapter(SArrayAdapter("Select").dropDownStyle(_.textSize(15 dip)))
+            }
           }
-        }
-      })
-      modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
-        def onNothingSelected(parent: AdapterView[_]) {}
-        def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
-          val techName = findView(TR.`device_technical_name`)
-          if(position > 0){
-            techName.setText(listOfDevices.filter{d => d.commercialName == modelSpinner.getSelectedItem.toString && d.brandName == brandSpinner.getSelectedItem.toString}.head.codeName)
-          } else techName.setText("")
-        }
-      })
-    case OnNext(None) =>CAlert(getString(R.string.connection_error_message, "No data"))
-    case OnError(e) => CAlert(getString(R.string.connection_error_message, e.getLocalizedMessage))
-  })
+        })
+        modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener {
+          def onNothingSelected(parent: AdapterView[_]) {}
+          //no use
+          def onItemSelected(parent: AdapterView[_], view: View, position: Int, id: Long) {
+            if (position > 0) {
+              val deviceTechName = listOfDevices.filter {
+                d => d.commercialName == modelSpinner.getSelectedItem.toString && d.brandName == brandSpinner.getSelectedItem.toString
+              }.head.codeName
+              techName.setText(deviceTechName)
+              buttonInstall.onClick {
+                mUnsubscribe += ScriptManager.getAsyncPartitionLayout(deviceTechName).execAsync.subscribe(
+                  _ match {
+                    case OnNext(Some(t)) => CInfo(t)
+                    case OnNext(None) => CAlert(getString(R.string.connection_error_message, "Server error"))
+                    case OnError(e) => CAlert(getString(R.string.connection_error_message, e.getLocalizedMessage))
+                  })
+                ()
+              }
+            } else {
+              techName.setText("")
+              buttonInstall.onClick(CAlert("Choose your device first"))
+            }
+          }
+        })
+      case OnNext(None) =>
+        val error = getString(R.string.connection_error_message, "No data")
+        CAlert(error)
+        buttonInstall.onClick(CAlert(error))
+        techName.setText(error)
+      case OnError(e) =>
+        val error = getString(R.string.connection_error_message, e.getLocalizedMessage)
+        CAlert(error)
+        buttonInstall.onClick(CAlert(error))
+        techName.setText(error)
+    })
+  }
 
   def refreshScriptVersion: Subscription = ScriptManager
     .getAsyncLastVersion
@@ -75,13 +103,17 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
       case OnNext((site, internal)) =>
         findView(TR.`script_version_server`).setText(site.getOrElse("?"))
         findView(TR.script_version_installed).setText(internal.getOrElse("?"))
-        val b = findView(TR.button_installed_onandroid_script_update)
-        if(site != internal){
-          b.setText(R.string.update)
-          b.onClick{mUnsubscribe += updateScriptButton; ()}
+        val button = findView(TR.button_installed_onandroid_script_update)
+        if (site != internal) {
+          button.setText(R.string.update)
+          button.onClick {
+            mUnsubscribe += updateScriptButton; ()
+          }
         } else {
-          b.setText("Remove")
-          b.onClick{mUnsubscribe += removeScriptButton; ()}
+          button.setText("Remove")
+          button.onClick {
+            mUnsubscribe += removeScriptButton; ()
+          }
         }
       case OnError(err) =>
         CAlert(getString(R.string.connection_error_message, err.getLocalizedMessage))
@@ -89,20 +121,19 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
     }
   }
 
-  def updateScriptButton() =  ScriptManager.saveLastScript.execAsync.subscribe(
+  def updateScriptButton() = ScriptManager.saveLastScript.execAsync.subscribe(
     _ match {
       case OnNext(t) => CInfo(getString(R.string.installed))
         mUnsubscribe += refreshScriptVersion
       case OnError(e) => CAlert(getString(R.string.connection_error_message, e.getLocalizedMessage))
     })
 
-  def removeScriptButton() =  ScriptManager.deleteScript().execAsync.subscribe(
+  def removeScriptButton() = ScriptManager.deleteScript().execAsync.subscribe(
     _ match {
       case OnNext(t) => CInfo("Deleted")
         mUnsubscribe += refreshScriptVersion
       case OnError(e) => CAlert("Error:" + e.getLocalizedMessage)
     })
-
 
   override def onDetach() {
     super.onDetach()

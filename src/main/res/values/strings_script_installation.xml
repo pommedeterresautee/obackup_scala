@@ -17,5 +17,6 @@
     <string name="script_installation_activity_title">Script installation</string>
     <string name="server">Server</string>
     <string name="update">Update</string>
+    <string name="install">Install</string>
 
 </resources>
