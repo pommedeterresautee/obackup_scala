@@ -3,30 +3,37 @@ package com.pommedeterresautee.twoborange3.Section.Terminal
 import android.support.v4.app.Fragment
 import android.view.{View, ViewGroup, LayoutInflater}
 import android.os.Bundle
-import com.pommedeterresautee.twoborange3.R
-import com.pommedeterresautee.twoborange3.Common.ShellExecutor
+import com.pommedeterresautee.twoborange3.{TR, TypedViewHolder, R}
+import com.pommedeterresautee.twoborange3.Common.{NewLine, FileManager, ShellExecutor}
 import com.pommedeterresautee.twoborange3.Common.RxThread._
-import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
+import rx.lang.scala.Notification.{OnError, OnNext}
 import android.widget.Toast
-import android.util.Log
 
 
-class TerminalFragment extends Fragment {
+class TerminalFragment extends Fragment with TypedViewHolder{
+
+  var layout:View = _
+  def findViewById(id: Int): View = layout.findViewById(id)
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
-    val v = inflater.inflate(R.layout.shell_styled_view, container, false)
-    v
+    layout = inflater.inflate(R.layout.shell_styled_view, container, false)
+    layout
   }
 
   override def onStart(): Unit = {
     super.onStart()
-    ShellExecutor.execute(List("echo s", " echo toto", "ls"))
+    val shellView = findView(TR.`terminal_view`)
+    var lastLineSize = 0
+
+    ShellExecutor(OnandroidCommands.getCommand, useRoot = true)
     .execAsync
     .subscribe(_ match {
-      case OnNext(s) => //Toast.makeText(getActivity, "Text: " + s, Toast.LENGTH_LONG).show()
-        Log.d("Rx log", s)
+      case OnNext(NewLine(s, true)) => shellView.append(s + "\n")
+        lastLineSize = shellView.getText.length()
+      case OnNext(NewLine(s, false)) =>
+        shellView.getText.replace(lastLineSize, shellView.getText.length(), s + "\n")
+        shellView.setSelection(shellView.getText.length())
       case OnError(e) => Toast.makeText(getActivity, "error:" + e.getLocalizedMessage, Toast.LENGTH_LONG).show()
-      case OnCompleted(e) => Toast.makeText(getActivity, "fin", Toast.LENGTH_LONG).show()
   })
 }
 }

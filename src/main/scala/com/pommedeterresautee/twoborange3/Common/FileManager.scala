@@ -67,5 +67,8 @@ object FileManager {
 
   def getOnAndroidScript: File = new File(getInternalStorage, ONANDROID_FILENAME)
 
+
+  def getBusybox: File = new File(getInternalStorage, BUSYBOX_FILENAME)
+
 //  def isNewVersionAvailable : ((String, String)) => Boolean = (site: String, internal:String) => site != internal
 }

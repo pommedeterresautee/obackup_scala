@@ -1,11 +1,9 @@
 package com.pommedeterresautee.twoborange3.Common
 
 import rx.lang.scala.{Subscription, Observer, Observable}
-import java.io.{BufferedReader, InputStreamReader, DataOutputStream}
+import java.io.DataOutputStream
 import scala.Predef.String
-import scala.Char
 import scala.io.Source
-import android.util.Log
 
 
 object ShellExecutor {
@@ -20,10 +18,10 @@ object ShellExecutor {
    * @param useRoot if true, commands are sent to Su, otherwise to the Shell
    * @return an Observable for an Async Execution
    */
-  def execute(commands:Traversable[String], useRoot: Boolean = false) = Observable{
-    (observer: Observer[String]) => {
-      val mCommandResult:StringBuilder = new StringBuilder
-      var precedentIsBackSpace = false
+  def apply(commands:Traversable[String], useRoot: Boolean = false) = Observable{
+    (observer: Observer[NewLine]) => {
+      val mCommandResult = StringBuilder.newBuilder
+      var mPreviousBackSpace = false
 
       val builder: ProcessBuilder = new ProcessBuilder(if (useRoot) "su" else "sh")
       builder.redirectErrorStream(true)
@@ -36,16 +34,16 @@ object ShellExecutor {
       Iterator.continually(input.next())
         .takeWhile(c => c != -1 || c != CHAR_OUT_OF_UNICODE)
         .foreach {
-        case CHAR_BACKSPACE => mCommandResult.setLength(mCommandResult.length - 1)
-          precedentIsBackSpace = true
+        case CHAR_BACKSPACE =>
+          if(!mPreviousBackSpace) observer.onNext(NewLine(mCommandResult.toString(), add = false))
+          mPreviousBackSpace = true
+          mCommandResult.setLength(mCommandResult.length - 1)
         case CHAR_NEW_LINE =>
-          observer.onNext(mCommandResult.toString())
+          observer.onNext(NewLine(mCommandResult.toString(), add = true))
           mCommandResult.clear()
-        case c => mCommandResult.append(c.toChar)
-          if (precedentIsBackSpace) {
-            observer.onNext(mCommandResult.toString())
-            precedentIsBackSpace = false
-          }
+          mPreviousBackSpace = true
+        case c => mCommandResult += c.toChar
+          mPreviousBackSpace = false
       }
 
     val code = process.waitFor
@@ -54,10 +52,10 @@ object ShellExecutor {
     os.close()
     input.close()
     process.destroy()
-
     observer.onCompleted()
-
     Subscription()
     }
   }
 }
+
+case class NewLine(line:String, add:Boolean)
