@@ -18,5 +18,8 @@
     <string name="server">Server</string>
     <string name="update">Update</string>
     <string name="install">Install</string>
+    <string name="filter_checkbox_string">Filter to compatible devices (disable if you don\'t see your device</string>
+    <string name="partition_layout_title">Partition layout</string>
+    <string name="setup">Setup</string>
 
 </resources>

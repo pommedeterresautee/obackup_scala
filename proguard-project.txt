@@ -143,4 +143,4 @@ public static final android.os.Parcelable$Creator *;
 -dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 
 #po
--keep class com.pommedeterresautee.twoborange3.Common.** {*;}
+#-keep class com.pommedeterresautee.twoborange3.Common.** {*;}

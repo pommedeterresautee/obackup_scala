@@ -19,7 +19,9 @@ scalacOptions in Compile += "-feature"
 platformTarget in Android := "android-19"
 
 resolvers ++= Seq("Bugsense repository" at "http://www.bugsense.com/gradle/",
-  "spray" at "http://repo.spray.io/"
+  "spray" at "http://repo.spray.io/",
+  "JCenter" at "http://jcenter.bintray.com",
+  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 libraryDependencies ++= Seq (
@@ -40,8 +42,12 @@ libraryDependencies ++= Seq (
   "com.google.api-client" % "google-api-client-android" % "latest.integration"  intransitive(),
   "com.google.http-client" % "google-http-client-jackson" % "latest.integration" intransitive(),
   "com.google.http-client" % "google-http-client-gson" % "latest.integration" intransitive(),
-  "io.spray" %%  "spray-json" % "1.2.5"
+  "io.spray" %%  "spray-json" % "1.2.5",
+  "org.macroid" %% "macroid" % "1.0.1"
 )
+
+//,
+//"com.typesafe.play" %% "play-json" % "2.2.0"
 
 ideaExcludeFolders ++= Seq (
     ".idea",
@@ -56,7 +62,10 @@ proguardCache in Android ++= Seq (
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-scala",
   ProguardCache("rx") % "com.netflix.rxjava" %% "rxjava-android",
   ProguardCache("org.joda.time") % "joda-time" %% "joda-time",
-  ProguardCache("play") % "play" %% "play-json"
+  ProguardCache("play") % "play",
+  ProguardCache("akka") % "com.typesafe.akka",
+  ProguardCache("org.macroid") % "org.macroid" %% "macroid",
+  ProguardCache("scalaz") % "org.scalaz"
 )
 
 

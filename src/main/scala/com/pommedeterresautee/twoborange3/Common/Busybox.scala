@@ -19,10 +19,9 @@ object Busybox {
    * @param context Activity one
    * @return a Rx Unsubscribe object
    */
-  def startCopyAsyncBusyboxIfNeeded(implicit context: Context) = {
-    val unsubsb = Observable{
+  def startCopyAsyncBusyboxIfNeeded(implicit context: Context) = Observable(
       copyBusyBoxIfNotYetDone(context.getApplicationContext)
-    }
+    )
       .subscribeOn(Schedulers.newThread)
       .observeOn(Schedulers.currentThread)
       .materialize
@@ -31,8 +30,7 @@ object Busybox {
       case OnCompleted(c) => //Never called
       case OnError(err) => err match {case err: Exception => longToast(context.getString(R.string.busybox_error_installation, err.getMessage))}
     })
-    Some(unsubsb)
-  }
+
 
   /**
    * Get the path to the BusyBox file.

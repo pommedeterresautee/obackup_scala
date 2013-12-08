@@ -13,6 +13,8 @@ import rx.lang.scala.Subscription
 import scala.Some
 import com.pommedeterresautee.twoborange3.{TR, TypedViewHolder, R}
 import android.widget.AdapterView
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 class InstallScriptFragment extends Fragment with TypedViewHolder {
 
@@ -32,6 +34,22 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
     super.onStart()
     mUnsubscribe += refreshScriptVersion
     mUnsubscribe += setPartitionLayoutViews
+
+//    Future{
+//      val url = new URL("https://raw.github.com/ameer1234567890/OnlineNandroid/master/version")
+//      val urlCon = url.openConnection()
+//      urlCon.setConnectTimeout(5000)
+//      urlCon.setReadTimeout(5000)
+//      val io = Source.fromInputStream(urlCon.getInputStream)
+//      val result = Option(io.getLines().mkString.split("\n")(0))
+//      io.close()
+//      result
+//    }.mapUi {
+//      case Some(result) ⇒ longToast(s"got this: $result")
+//      case None ⇒ longToast("got nothing really...")
+//    } onFailureUi {
+//      case t: Throwable ⇒ longToast(t.getLocalizedMessage)
+//    }
   }
 
   def setPartitionLayoutViews() = {
@@ -39,7 +57,10 @@ class InstallScriptFragment extends Fragment with TypedViewHolder {
     val modelSpinner = findView(TR.`device_choice_model_spinner`)
     val buttonInstall = findView(TR.`button_install_partition_layout`)
     val techName = findView(TR.`device_technical_name`)
-    ScriptManager.getAsyncLayoutTable
+    val filter:Boolean = findView(TR.`checkbox_filter`).isChecked
+    (if(filter)
+      ScriptManager.getAsyncLayoutTableCompatible
+      else ScriptManager.getAsyncLayoutTable)
       .execAsync
       .subscribe(_ match {
       case OnNext(listOfDevices) =>

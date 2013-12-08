@@ -13,7 +13,6 @@ import com.stericson.RootTools.RootTools
 import scala.collection.immutable._
 import scala.Some
 import spray.json._
-import DefaultJsonProtocol._
 
 
 object ScriptManager {
@@ -22,16 +21,13 @@ object ScriptManager {
     override def toString = brandName + " (model: " + commercialName + ")\n" + partitionTable.mkString(", ")
     override def compare(that: Device): Int = this.brandName compareTo that.brandName match {
         case 0 => commercialName.compareTo(that.commercialName)
-        case compareBrand => compareBrand
+        case brandCompare => brandCompare
       }
   }
 
-//  case class Color(name: String, red: Int, green: Int, blue: Int)
-
   object MyJsonProtocol extends DefaultJsonProtocol {
-    implicit val colorFormat = jsonFormat4(Device)
+    implicit val f = jsonFormat4(Device)
   }
-
 
   private val urlVersion = "https://raw.github.com/ameer1234567890/OnlineNandroid/master/version"
 
@@ -43,9 +39,27 @@ object ScriptManager {
   
   def getAsyncPartitionLayout(deviceName:String) = getAsyncUrl(partitionLayoutBase + deviceName)
 
-  def getAsyncLayoutTable:Observable[Seq[Device]] = getAsyncUrl(jsonDevices).map{json:Option[String] =>
-    import MyJsonProtocol._
-    json.get.asJson.convertTo[Seq[Device]]
+  def getAsyncLayoutTable:Observable[Seq[Device]] =
+    getAsyncUrl(jsonDevices).map{
+      json:Option[String] =>
+      import MyJsonProtocol._
+      val des = json.get.asJson
+      val result = des.convertTo[Seq[Device]]
+      result
+    }
+
+
+  def getAsyncLayoutTableCompatible:Observable[Seq[Device]] ={
+    val tableToRequest = List(("cache","/cache"),("system","/system"),("userdata","/data"))
+    getAsyncLayoutTable
+      .zip(getDevicesPartition)
+      .map{
+      case (internetL, deviceL) => internetL.filter{
+        internetDevice =>
+          tableToRequest.map{case (key, path) => deviceL.getOrElse(path, "")}
+            .equals(
+              tableToRequest.map{case (key, path) => internetDevice.partitionTable.getOrElse(key, "")}
+            )}}
   }
 
   def getAsyncLastVersion = getAsyncUrl(urlVersion)
@@ -118,14 +132,15 @@ object ScriptManager {
   }
 
 
-  private def getDevicesPartition: Map[String, String] = {
+  private def getDevicesPartition = Observable{
     import scala.collection.JavaConverters._
     RootTools
       .getMounts
       .asScala
-      .map(mount => (mount.getMountPoint.getAbsolutePath, mount.getDevice.getCanonicalFile.getName))
+      .map{mount =>
+      val result =
+      (mount.getMountPoint.getAbsolutePath, mount.getDevice.getCanonicalFile.getName)
+    result}
     .toMap
   }
-
-
 }
