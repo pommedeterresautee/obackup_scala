@@ -35,11 +35,11 @@ object ShellExecutor {
         .takeWhile(c => c != -1 || c != CHAR_OUT_OF_UNICODE)
         .foreach {
         case CHAR_BACKSPACE =>
-          if(!mPreviousBackSpace) observer.onNext(NewLine(mCommandResult.toString(), add = false))
+          if(!mPreviousBackSpace) observer.onNext(NewLine(mCommandResult.toString(), add = false, finished = false))
           mPreviousBackSpace = true
           mCommandResult.setLength(mCommandResult.length - 1)
         case CHAR_NEW_LINE =>
-          observer.onNext(NewLine(mCommandResult.toString(), add = true))
+          observer.onNext(NewLine(mCommandResult.toString(), add = true, finished = false))
           mCommandResult.clear()
           mPreviousBackSpace = true
         case c => mCommandResult += c.toChar
@@ -52,10 +52,11 @@ object ShellExecutor {
     os.close()
     input.close()
     process.destroy()
+    observer.onNext(NewLine("", add = false, finished = true))
     observer.onCompleted()
     Subscription()
     }
   }
 }
 
-case class NewLine(line:String, add:Boolean)
+case class NewLine(line:String, add:Boolean, finished:Boolean)
